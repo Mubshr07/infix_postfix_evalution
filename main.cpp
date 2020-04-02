@@ -1,9 +1,14 @@
 #include <iostream>
 #include<stdlib.h>
+
+#include<conio.h>
+#include<stdio.h>
+
 #include<ctype.h>
 #include<string.h>
 #include<sstream>
 #include <stack>
+#include <algorithm>
 
 
 #define MAX_LEN 200
@@ -18,6 +23,7 @@ int is_operator(char symbol);
 int precedence(char symbol);
 string InfixToPostfix(char inputChar[]);
 int EvalPostfix( string inputStr);
+string reverseThisString(string str);
 
 int main()
 {
@@ -27,23 +33,35 @@ int main()
     cout<<"\t======================  Task 2  ========================================="<<endl;
     cout<<"\t========================================================================="<<endl;
 
+    //    stringstream strm;
+    //    string tstr, t2;
+    //    strm.str("this is 1.");
+    //    //strm>>tstr;
+    //    tstr = strm.str();
+    //    strm>>t2;
+    //    strm.str("that is 2.");
+    //    strm.str("these is 3.");
+    //    strm>>tstr;
+
+
+
     do {
-    cout<<endl<<endl;
-    cout<<"\n\tEnter Infix expression : ";
-    gets(infix);
+        cout<<endl<<endl;
+        cout<<"\n\tEnter Infix expression : ";
+        gets(infix);
 
 
-    cout<<endl<<endl;
-    postFix_str = InfixToPostfix(infix);
-    cout<<"\tPostfix Expression:  "<<postFix_str;
+        cout<<endl<<endl;
+        postFix_str = InfixToPostfix(infix);
+        cout<<"\tPostfix Expression:  "<<postFix_str;
 
-    cout<<endl<<endl;
-    cout<<"\tEvalution of Postfix Expression Result :  ";
-    cout<< EvalPostfix(postFix_str);
+        cout<<endl<<endl;
+        cout<<"\tEvalution of Postfix Expression Result :  ";
+        cout<< EvalPostfix(postFix_str);
 
-    cout<<endl<<endl;
-    cout<<" Do you want to computer other statement? Press y for YES :\t";
-    gets(playagain);
+        cout<<endl<<endl;
+        cout<<" Do you want to computer other statement? Press y for YES :\t";
+        gets(playagain);
     }
     while(playagain[0] == 'y' || playagain[0] == 'Y');
     cout<<endl<<endl;
@@ -62,8 +80,14 @@ int EvalPostfix(string inputStr)
     int n = inputStr.length();
     char postfix[n + 1];
     strcpy(postfix, inputStr.c_str());
-
-
+    while(true)
+    {
+        if(mypostfix.empty())
+        {
+            break;
+        }
+        mypostfix.pop();
+    }
     int i;
     char ch;
     int val;
@@ -72,7 +96,6 @@ int EvalPostfix(string inputStr)
     stringstream ss;
 
     string::size_type siz;
-
 
     for (i = 0; postfix[i] != '\0'; i++) {
         ch = postfix[i];
@@ -90,11 +113,12 @@ int EvalPostfix(string inputStr)
             }
             ss.str("");
             while ((' ' != mypostfix.top()) && (mypostfix.size() > 0)) {
-                ss.str(to_string(mypostfix.top()));
+                ss<<to_string(mypostfix.top());
                 mypostfix.pop();
             }
+            getline(ss, dd);
+            std::reverse(dd.begin(), dd.end());
 
-            ss>>dd;
             A = stoi(dd, &siz, 10);
             ss.clear();
             while((' ' == mypostfix.top()) && (mypostfix.size() > 0))
@@ -102,7 +126,7 @@ int EvalPostfix(string inputStr)
                 mypostfix.pop();
             }
             while ((' ' != mypostfix.top()) && (mypostfix.size() > 0)) {
-                ss.str(to_string(mypostfix.top()));
+                ss<<to_string(mypostfix.top());
                 mypostfix.pop();
                 if(mypostfix.size() <= 0)
                 {
@@ -110,7 +134,9 @@ int EvalPostfix(string inputStr)
                 }
             }
             dd = "";
-            ss>>dd;
+            getline(ss, dd);
+            std::reverse(dd.begin(), dd.end());
+
             B = stoi(dd, &siz, 10);
             ss.clear();
 
@@ -136,8 +162,10 @@ int EvalPostfix(string inputStr)
                 val = B - A;
                 break;
             }
+            dd = to_string(val);
+            std::reverse(dd.begin(), dd.end());
 
-            //cout<<endl<<endl<<" first Number : "<<A<<" and second : "<<B<<" so result is : "<<val;
+            val = stoi(dd, &siz, 10);
             mypostfix.push(val);
         }
         else if(ch == ' ')
@@ -145,7 +173,10 @@ int EvalPostfix(string inputStr)
             mypostfix.push(' ');
         }
     } // end of for loop
+    dd = to_string(val);
+    std::reverse(dd.begin(), dd.end());
 
+    val = stoi(dd, &siz, 10);
     return val;
 
 }
@@ -236,9 +267,6 @@ string InfixToPostfix(char inputChar[])
     output[j] = '\0';
     return (string) output;
 }
-
-
-
 
 
 
